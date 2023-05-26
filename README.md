@@ -8,7 +8,13 @@
   - fire e forget -> tenho uma solicitação e sem reposta
 
 ### Funcionamento
-- criamos um RSocket (uma class que o implementa, conforme demonstrado abaixo):
+- criamos um RSocket
+- existe alguns tipos que podemos sobreescrever, como:
+ - request response (com retorno)
+ - fireAndForget (sem retorno)
+ - request stream (requisição com vários retornos)
+ - request-channel (varias requisições com vários retornos)
+- abaixo um exemplode classe que o implementa:
 ```
 @Slf4j
 public class MathService implements RSocket {
