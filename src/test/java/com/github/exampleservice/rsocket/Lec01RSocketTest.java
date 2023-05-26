@@ -1,5 +1,7 @@
 package com.github.exampleservice.rsocket;
 
+import com.github.exampleservice.rsocket.dto.RequestDTO;
+import com.github.exampleservice.rsocket.util.ObjectUtil;
 import io.rsocket.RSocket;
 import io.rsocket.core.RSocketConnector;
 import io.rsocket.transport.netty.client.TcpClientTransport;
@@ -23,7 +25,7 @@ public class Lec01RSocketTest {
 
     @Test
     public void fireAndForget() {
-        final var payload = DefaultPayload.create("hello world");
+        final var payload = ObjectUtil.toPayload(new RequestDTO(100));
         final var mono = this.rSocket.fireAndForget(payload);
 
         StepVerifier.create(mono)
