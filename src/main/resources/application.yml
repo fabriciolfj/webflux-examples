@@ -1,0 +1,4 @@
+logging:
+  level:
+    web: INFO
+    root: INFO
