@@ -1,11 +1,13 @@
 package com.github.exampleservice.rsocket.service;
 
+import com.github.exampleservice.rsocket.dto.ChartResponseDto;
 import com.github.exampleservice.rsocket.dto.RequestDTO;
 import com.github.exampleservice.rsocket.dto.ResponseDTO;
 import com.github.exampleservice.rsocket.util.ObjectUtil;
 import io.rsocket.Payload;
 import io.rsocket.RSocket;
 import lombok.extern.slf4j.Slf4j;
+import org.reactivestreams.Publisher;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -36,6 +38,15 @@ public class MathService implements RSocket {
                 .flux()
                 .flatMap(p -> calculate(p.getInput()))
                 .map(v -> ObjectUtil.toPayload(v));
+    }
+
+    @Override
+    public Flux<Payload> requestChannel(Publisher<Payload> payloads) {
+        return Flux.from(payloads)
+                .map(p -> ObjectUtil.toObject(p, RequestDTO.class))
+                .map(RequestDTO::getInput)
+                .map(i -> new ChartResponseDto(i, (i * i) + 1))
+                .map(ObjectUtil::toPayload);
     }
 
     private Flux<ResponseDTO> calculate(final int value) {
