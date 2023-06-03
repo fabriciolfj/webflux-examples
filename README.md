@@ -27,10 +27,10 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 ### Funcionamento
 - criamos um RSocket
 - existe alguns tipos que podemos sobreescrever, como:
- - request response (com retorno)
- - fireAndForget (sem retorno)
- - request stream (requisição com vários retornos)
- - request-channel (varias requisições com vários retornos)
+ - request response (com retorno), exemplo de uso: criar um usuário
+ - fireAndForget (sem retorno), exemplo de uso: logar, deletar um usuario enviar um evento
+ - request stream (requisição com vários retornos), exemplo de uso: procurar resultados, fazer varios updates
+ - request-channel (varias requisições com vários retornos), exemplo de uso: chat, game e etc.
 - abaixo um exemplode classe que o implementa:
 ```
 @Slf4j

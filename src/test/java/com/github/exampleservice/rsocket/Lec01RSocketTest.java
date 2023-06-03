@@ -1,5 +1,6 @@
 package com.github.exampleservice.rsocket;
 
+import com.github.exampleservice.rsocket.dto.ChartResponseDto;
 import com.github.exampleservice.rsocket.dto.RequestDTO;
 import com.github.exampleservice.rsocket.dto.ResponseDTO;
 import com.github.exampleservice.rsocket.util.ObjectUtil;
@@ -13,6 +14,8 @@ import org.junit.jupiter.api.TestInstance;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
+
+import java.time.Duration;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class Lec01RSocketTest {
@@ -51,14 +54,17 @@ public class Lec01RSocketTest {
 
     @Test
     public void requestStream() {
-        final Payload payload = ObjectUtil.toPayload(new RequestDTO(8));
-        final Flux<ResponseDTO> flux = this.rSocket.requestStream(payload)
-                //.log()
-                .map(p -> ObjectUtil.toObject(p, ResponseDTO.class))
+        Flux<Payload> payloadFlux = Flux.range(-10, 21)
+                .delayElements(Duration.ofMillis(500))
+                .map(RequestDTO::new)
+                .map(ObjectUtil::toPayload);
+
+        Flux<ChartResponseDto> chartResponseDtoFlux = this.rSocket.requestChannel(payloadFlux)
+                .map(p -> ObjectUtil.toObject(p, ChartResponseDto.class))
                 .doOnNext(System.out::println);
 
-        StepVerifier.create(flux)
-                .expectNextCount(10)
+        StepVerifier.create(chartResponseDtoFlux)
+                .expectNextCount(21)
                 .verifyComplete();
     }
 }
