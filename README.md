@@ -1,5 +1,22 @@
 # webflux-examples
 
+## RFC 7807
+- spring boot 3 suporta o contrato da norma acima, o ProblemDetail, que precisa ser ativado no properties da aplicação
+
+```
+spring:
+  mvc:
+    problemdetails:
+      enabled: true
+```
+- ou extendendo a classe abaixo:
+```
+@RestControllerAdvice
+public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
+    //...
+}
+```
+
 ## Spring RSocket
 - protocolo tcp/ websocket
 - diferente o modo http do webflux, este possui alguns modos a mais, alem do request /response:
