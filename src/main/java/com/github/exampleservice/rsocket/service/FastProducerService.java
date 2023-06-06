@@ -9,7 +9,7 @@ import reactor.core.publisher.Flux;
 public class FastProducerService implements RSocket {
 
     @Override
-    public Flux<Payload> requestChannel(Publisher<Payload> payloads) {
+    public Flux<Payload> requestStream(Payload payload)  {
         return Flux.range(1, 1000)
                 .map(i -> i + " ")
                 .doOnNext(System.out::println)

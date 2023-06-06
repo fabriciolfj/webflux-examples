@@ -14,6 +14,8 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
+import java.time.Duration;
+
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class Lec03BackPressureTest {
 
@@ -30,6 +32,7 @@ public class Lec03BackPressureTest {
     public void backpressure() {
         Flux<String> mono = rSocket.requestStream(DefaultPayload.create(""))
                 .map(Payload::getDataUtf8)
+                .delayElements(Duration.ofSeconds(1))
                 .doOnNext(System.out::println);
 
         StepVerifier.create(mono)
