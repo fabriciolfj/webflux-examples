@@ -17,6 +17,9 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 }
 ```
 
+## socket
+- socket é uma interface de programação que permite a comunicação bidirecional de baixo nível entre dois computadores em uma rede. Ele oferece flexibilidade máxima para enviar e receber dados arbitrários.
+
 ## Spring RSocket
 - protocolo tcp/ websocket
 - diferente o modo http do webflux, este possui alguns modos a mais, alem do request /response:
