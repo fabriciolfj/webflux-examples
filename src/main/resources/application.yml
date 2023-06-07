@@ -2,3 +2,8 @@ logging:
   level:
     web: INFO
     root: INFO
+
+spring:
+  rsocket:
+    server:
+      port: 6565
