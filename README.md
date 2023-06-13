@@ -72,3 +72,16 @@ public class SocketAcceptorImpl implements SocketAcceptor {
         final var mono = this.rSocket.fireAndForget(payload);
 ```
 - lembrando que nesse modelo simples, temos apenas um acceptor registrado no nosso servidor
+
+### Tratativas de erro
+- podemos trar os erros de 3 maneiras:
+  - defaultIfEmpty -> colocar um valor default se nao atendeu alguma regra
+  - swithIfEmpty -> emitir um evento ou error (Mono.error())
+  - onErrorReturn -> em caso de erro, emitir um valor, este e para o ouvinte do evento
+- um outra forma é utilizar a anotação @MessageExceptionHandler, conforme o exemplo abaixo, que captura as exceptions lançadas como IllegalArgumentException
+```
+    @MessageExceptionHandler(IllegalArgumentException.class)
+    public Mono<Integer> handleException(Exception e) {
+        return Mono.just(-1);
+    }
+```
