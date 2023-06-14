@@ -9,51 +9,37 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.messaging.rsocket.RSocketRequester;
+import org.springframework.messaging.rsocket.annotation.support.RSocketMessageHandler;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 @SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class Lec03RSocketTest {
+public class Lec04RSocketTest {
 
     private RSocketRequester rSocketRequester;
 
     @Autowired
     private RSocketRequester.Builder builder;
 
+    @Autowired
+    private RSocketMessageHandler handler;
+
     @BeforeAll
     public void setup() {
         this.rSocketRequester = this.builder
+                .rsocketConnector(c -> c.acceptor(handler.responder()))
                 .transport(TcpClientTransport.create("localhost", 6565));
     }
 
     @Test
-    public void request() {
-        final Mono<Integer> send = this.rSocketRequester.route("math.validation.double.31")
-                .retrieveMono(Integer.class)
-                .onErrorReturn(Integer.MIN_VALUE)
-                .doOnNext(System.out::println);
-
-        StepVerifier.create(send)
-                .expectNextCount(1)
-                .verifyComplete();
-    }
-
-    @Test
-    public void requestResponse() {
-        Mono<Response<Integer>> mono = this.rSocketRequester.route("math.validation.double.response.30")
-                .retrieveMono(new ParameterizedTypeReference<Response<Integer>>() {
-                })
-                .doOnNext(r -> {
-                    if(r.hasError()) {
-                        System.out.println(r.getErrorResponse().getStatusCode().getDescription());
-                    } else {
-                        System.out.println(r.getSuccessResponse());
-                    }
-                });
+    public void callbackTest() throws InterruptedException {
+        Mono<Void> mono = this.rSocketRequester.route("batch.job.request").data(5).send();
 
         StepVerifier.create(mono)
-                .expectNextCount(1)
                 .verifyComplete();
+
+        Thread.sleep(12000);
+
     }
 }
