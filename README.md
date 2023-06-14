@@ -85,3 +85,15 @@ public class SocketAcceptorImpl implements SocketAcceptor {
         return Mono.just(-1);
     }
 ```
+
+### Conexão
+- podemos gerenciar e ver a conexão de um cliente ao nosso server
+- inclusive podemos fechar a conexão em caso de falha, usando o dispose(), que libera os recursos envolvidos no Mono.
+```
+    @ConnectMapping
+    public Mono<Void> handleConnection(ClientConnectionRequest request, RSocketRequester rSocketRequester) {
+        System.out.println("connection setup " + request);
+        return request.getSecretKey().equals("password") ? Mono.empty() :
+                Mono.fromRunnable(() -> rSocketRequester.rsocketClient().dispose());
+    }
+```

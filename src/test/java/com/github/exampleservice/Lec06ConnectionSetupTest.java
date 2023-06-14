@@ -2,6 +2,7 @@ package com.github.exampleservice;
 
 import com.github.exampleservice.controller.dto.ComputationRequestDto;
 import com.github.exampleservice.controller.dto.ComputationResponseDto;
+import com.github.exampleservice.rsocket.dto.ClientConnectionRequest;
 import io.rsocket.transport.netty.client.TcpClientTransport;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.RepeatedTest;
@@ -24,7 +25,12 @@ public class Lec06ConnectionSetupTest {
 
     @BeforeAll
     public void setup() {
+        var client = new ClientConnectionRequest();
+        client.setClientId("order-service");
+        client.setSecretKey("passwod");
+
         this.rSocketRequester = this.builder
+                .setupData(client)
                 .transport(TcpClientTransport.create("localhost", 6565));
     }
 
