@@ -24,7 +24,7 @@ public class MathClientManager {
                 }).subscribe();
     }
 
-    @Scheduled(fixedRate = 1000)
+    //@Scheduled(fixedRate = 1000)
     public void print() {
         System.out.println(set);
     }
