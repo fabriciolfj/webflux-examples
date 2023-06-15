@@ -22,7 +22,7 @@ public class MathService {
     }
 
     public Flux<ComputationResponseDto> tableStream(ComputationRequestDto dto) {
-        return Flux.range(1, 10)
+        return Flux.range(1, 1000)
                 .map(i -> new ComputationResponseDto(dto.getInput(), dto.getInput() * i));
     }
 

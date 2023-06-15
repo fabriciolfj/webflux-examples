@@ -97,3 +97,9 @@ public class SocketAcceptorImpl implements SocketAcceptor {
                 Mono.fromRunnable(() -> rSocketRequester.rsocketClient().dispose());
     }
 ```
+
+## Session
+- quando temos uma sessao aberta com um stream (comunicação bidirecional)
+- caso a conexão seja perdida, uma estratégia de retomar de onde parou é replay strategy
+- funciona da seguinte maneira:
+  -  
