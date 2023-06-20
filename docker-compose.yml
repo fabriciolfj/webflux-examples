@@ -3,10 +3,10 @@ services:
   nginx:
     image: nginx:1.15-alpine
     volumes:
-      - ./conf:/etc/nginx/conf.d
+      - ./conf:/etc/nginx/nginx.conf.d
     ports:
       - 6566:6566
-    command: "nginx -c /etc/nginx/conf.d/nginx.conf"
+    command: "nginx -c /etc/nginx/nginx.conf.d/nginx.conf"
 
   zipkin:
     image: openzipkin/zipkin

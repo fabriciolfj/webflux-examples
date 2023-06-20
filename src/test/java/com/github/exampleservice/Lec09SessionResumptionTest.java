@@ -2,6 +2,7 @@ package com.github.exampleservice;
 
 import com.github.exampleservice.controller.dto.ComputationRequestDto;
 import com.github.exampleservice.controller.dto.ComputationResponseDto;
+import io.rsocket.core.Resume;
 import io.rsocket.transport.netty.client.TcpClientTransport;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +27,11 @@ public class Lec09SessionResumptionTest {
     @Test
     public void connectionTest() throws InterruptedException {
         var req = this.builder
-                .transport(TcpClientTransport.create("localhost", 6565));
+                .rsocketConnector(c -> c
+                        .resume(resumeStrategy())
+                        //.reconnect(retryStrategy())
+                        )
+                .transport(TcpClientTransport.create("localhost", 6566));
 
         final Flux<ComputationResponseDto> send =  req.route("math.service.table")
                 .data(new ComputationRequestDto(5))
@@ -39,5 +44,16 @@ public class Lec09SessionResumptionTest {
 
         Thread.sleep(2000);
 
+    }
+
+    private Resume resumeStrategy() {
+        return new Resume()
+                .retry(Retry.fixedDelay(2000, Duration.ofSeconds(2))
+                        .doBeforeRetry(s ->  System.out.println("resume - retry: " + s.totalRetriesInARow())));
+    }
+
+    private Retry retryStrategy() {
+        return Retry.fixedDelay(100, Duration.ofSeconds(1))
+                .doBeforeRetry(s -> System.out.println("retrying connection :" + s.totalRetriesInARow()));
     }
 }
