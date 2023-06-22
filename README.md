@@ -100,6 +100,60 @@ public class SocketAcceptorImpl implements SocketAcceptor {
 
 ## Session
 - quando temos uma sessao aberta com um stream (comunicação bidirecional)
-- caso a conexão seja perdida, uma estratégia de retomar de onde parou é replay strategy
-- funciona da seguinte maneira:
-  -  
+- caso a conexão seja perdida, uma estratégia de retomar de onde parou é replay strategy ou resume
+
+```
+    public void connectionTest() throws InterruptedException {
+        var req = this.builder
+                .rsocketConnector(c -> c
+                        .resume(resumeStrategy())
+                        //.reconnect(retryStrategy())
+                        )
+                .transport(TcpClientTransport.create("localhost", 6566));
+
+        final Flux<ComputationResponseDto> send =  req.route("math.service.table")
+                .data(new ComputationRequestDto(5))
+                .retrieveFlux(ComputationResponseDto.class)
+                .doOnNext(System.out::println);
+
+        StepVerifier.create(send)
+                .expectNextCount(1000)
+                .verifyComplete();
+
+        Thread.sleep(2000);
+
+    }
+
+    private Resume resumeStrategy() {
+        return new Resume()
+                .retry(Retry.fixedDelay(2000, Duration.ofSeconds(2))
+                        .doBeforeRetry(s ->  System.out.println("resume - retry: " + s.totalRetriesInARow())));
+    }
+```
+
+## load balance
+- podemos utilizar o load balance do lado do servidor, por exemplo usando o nginx como um proxy reverso
+- podemos tambem utilizar o load balance do lado do cliente, fazendo uso de um registry e a estratégia de direcionamento
+
+### estratégia de load balance
+#### round robin
+- Nessa estratégia, os pedidos de clientes são sequencialmente direcionados para os recursos disponíveis em uma ordem circular, em um ciclo contínuo. Por exemplo, se houver três servidores A, B e C, a primeira solicitação será enviada para o servidor A, a segunda para o servidor B, a terceira para o servidor C e a quarta novamente para o servidor A, e assim por diante.
+
+#### wighted
+- A estratégia de balanceamento de carga ponderada, ou "Weighted Load Balancing Strategy" em inglês, é uma variação do algoritmo de 
+balanceamento de carga Round Robin, onde cada recurso disponível recebe um peso ou valor atribuído para indicar sua capacidade relativa de processamento.
+
+- Nessa estratégia, em vez de distribuir o tráfego de forma igualitária entre os recursos, cada recurso recebe uma porção do tráfego proporcional ao seu peso. 
+Recursos com pesos mais altos receberão uma carga maior de solicitações, enquanto recursos com pesos mais baixos receberão uma carga menor. 
+Isso permite que recursos mais poderosos ou com maior capacidade processem mais solicitações do que os outros.
+
+- Por exemplo, considere três servidores A, B e C, com pesos atribuídos de 3, 2 e 1, respectivamente. 
+Em cada ciclo de distribuição de carga, o servidor A receberá 3 vezes mais solicitações do que o servidor C, 
+enquanto o servidor B receberá o dobro das solicitações do servidor C.
+
+- O balanceamento de carga ponderada é útil quando os recursos têm capacidades diferentes ou 
+quando é necessário priorizar certos recursos em relação a outros. 
+Permite uma alocação mais eficiente de recursos com base em suas capacidades individuais.
+No entanto, é importante observar que a escolha dos pesos requer uma compreensão adequada das capacidades dos recursos e do 
+padrão de tráfego esperado. Se os pesos não forem atribuídos corretamente, a carga ainda pode ficar desequilibrada. 
+Portanto, é essencial ajustar e monitorar os pesos conforme necessário para garantir um balanceamento de carga eficaz.

@@ -3,6 +3,9 @@ logging:
     web: INFO
     root: INFO
 
+server:
+  port: 8089
+
 spring:
   rsocket:
     server:
