@@ -157,3 +157,18 @@ Permite uma alocação mais eficiente de recursos com base em suas capacidades i
 No entanto, é importante observar que a escolha dos pesos requer uma compreensão adequada das capacidades dos recursos e do 
 padrão de tráfego esperado. Se os pesos não forem atribuídos corretamente, a carga ainda pode ficar desequilibrada. 
 Portanto, é essencial ajustar e monitorar os pesos conforme necessário para garantir um balanceamento de carga eficaz.
+
+#### Segurança
+```
+O funcionamento da criptografia assimétrica envolve os seguintes conceitos:
+
+Chave pública: Cada entidade envolvida no processo de criptografia assimétrica possui um par de chaves: uma chave pública e uma chave privada. A chave pública é amplamente divulgada e pode ser compartilhada com qualquer pessoa. Ela é usada para criptografar os dados que serão enviados ao proprietário da chave privada.
+
+Chave privada: A chave privada é mantida em segredo e é conhecida apenas pelo proprietário. Ela é usada para descriptografar os dados que foram criptografados com a chave pública correspondente. A chave privada não deve ser compartilhada ou divulgada publicamente.
+
+Criptografia: Quando uma entidade deseja enviar uma mensagem para outra entidade usando criptografia assimétrica, ela usa a chave pública do destinatário para criptografar a mensagem. A mensagem criptografada pode ser enviada de forma segura pela rede.
+
+Descriptografia: O destinatário recebe a mensagem criptografada e a descriptografa usando sua chave privada correspondente. Somente a chave privada correta pode desfazer a criptografia e revelar o conteúdo original da mensagem.
+
+Assinaturas digitais: Além da criptografia, as chaves públicas e privadas também são usadas para fornecer autenticidade e integridade aos dados. O remetente pode usar sua chave privada para assinar digitalmente uma mensagem, criando uma assinatura digital única. O destinatário pode usar a chave pública do remetente para verificar a autenticidade da assinatura e garantir que a mensagem não tenha sido alterada desde a assinatura.
+```

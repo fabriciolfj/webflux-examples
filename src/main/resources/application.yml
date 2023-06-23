@@ -9,6 +9,12 @@ server:
 spring:
   rsocket:
     server:
+     # ssl:
+     #   enabled: true
+     #   key-store-type: PKCS12
+     #   key-store: /home/spark/Documentos/repo/webflux-examples/rsocket-server.p12
+     #   key-store-password: password
+     #   key-alias: rsocket
       port: 6565
   flyway:
     user: ${spring.r2dbc.username}
