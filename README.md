@@ -172,3 +172,6 @@ Descriptografia: O destinatário recebe a mensagem criptografada e a descriptogr
 
 Assinaturas digitais: Além da criptografia, as chaves públicas e privadas também são usadas para fornecer autenticidade e integridade aos dados. O remetente pode usar sua chave privada para assinar digitalmente uma mensagem, criando uma assinatura digital única. O destinatário pode usar a chave pública do remetente para verificar a autenticidade da assinatura e garantir que a mensagem não tenha sido alterada desde a assinatura.
 ```
+- para o rsocket temos segurança no nivel de setup e request
+  - setup seria no nivel de autenticação
+  - request nivel de autorização
