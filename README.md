@@ -26,6 +26,10 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
   - request stream -> envio uma solicitação tenho várias respostas (mensagens)
   - bi-directional streaming -> tenho uma varias solicitações e varias respostas (mensagens)
   - fire e forget -> tenho uma solicitação e sem reposta
+ 
+## Serialização/Deserialização
+- Por padrão, o WebFlux usa o protocolo baseado em texto HTTP1.1. (Não é apenas um problema do WebFlux. É o protocolo HTTP 1.1 que tem mais de 20 anos)
+RSocket / gRPC (HTTP2) usa formato binário. formato binário é mais compacto em comparação com o texto. Portanto, podemos ver uma melhoria significativa no desempenho em alguns casos.
 
 ### Funcionamento
 - criamos um RSocket
